@@ -2,9 +2,11 @@
 
 #include "layers.h"
 #include "oled.c"
+#include "keylogger/keylogger.h"
 
 enum custom_keycodes {
-  KC_ENYE = SAFE_RANGE
+  KC_ENYE = SAFE_RANGE,
+  KC_PRIV
 };
 
 // clang-format off
@@ -79,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |      |      | Vol- | Mute | Vol+ |      |                    |      |Brigh+|      |Brigh-|      |      |
+ * |      |      | Vol- | Mute | Vol+ |      |                    |      |Brigh+|      |Brigh-| PRIV |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * | CAPS |      |      |      |      |      |-------.    ,-------|      |      |RGB ON| HUE+ | SAT+ | VAL+ |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
@@ -91,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
   [_ADJUST] = LAYOUT(
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  XXXXXXX, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX,                   XXXXXXX, KC_BRIU, XXXXXXX, KC_BRID, XXXXXXX, XXXXXXX,
+  XXXXXXX, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX,                   XXXXXXX, KC_BRIU, XXXXXXX, KC_BRID, KC_PRIV, XXXXXXX,
   KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENYE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                              _______, _______, _______, _______, _______, _______, _______, _______
@@ -108,6 +110,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       switch(keycode) {
         case KC_ENYE: // ñ
           tap_code16(RALT(KC_N));
+          break;
+        case KC_PRIV: // Toggle private mode
+          keylogger_toggle_priv_mode();
           break;
         default:
           break;
